@@ -1,0 +1,76 @@
+<html>
+<head>
+    <title>Interactive Drawing App</title>
+    <style>
+        canvas{
+            border:1px solid black;
+            align-items: center;
+        }
+        .color-picker{
+            margin-top:10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Drawing App</h1>
+    <canvas id="drawingcanvas" width="500" height="500"></canvas>
+    <div class="color-picker">
+         <button onclick="changecolor('blue')">blue</button>
+        <button onclick="changecolor('orange')">orange</button>
+        <button onclick="changecolor('yellow')">Yellow</button>
+        <button onclick="changecolor('red')">Red</button>
+        <button onclick="changecolor('brown')">Brown</button>  
+        <button onclick="changecolor('violet')">Violet</button>
+        <button onclick="changecolor('green')">Green</button>
+        <button onclick="clearcanvas()">Eraser</button>
+        <button onclick="downloadcanvas()">Download</button>
+    </div>
+    <script>
+        const canvas=document.getElementById('drawingcanvas');
+        const ctx=canvas.getContext('2d');
+        let drawing=false;
+        let currentcolor='black';
+         canvas.addEventListener('mousedown',(e)=>{
+            drawing=true;
+            draw(e);
+        });
+              canvas.addEventListener('mousemove',(e)=>{
+            if(drawing){
+            draw(e);
+            }
+        });
+        canvas.addEventListener('mouseup',()=>{
+            drawing=false;
+        });
+        canvas.addEventListener('mouseleave',()=>{
+            drawing=false;
+            ctx.beginPath();
+        });
+        function draw(e){
+            ctx.lineWidth=5;
+            ctx.lineCap='round';
+        ctx.strokeStyle=currentcolor;
+        ctx.lineTo(e.clientX-canvas.offsetLeft,e.clientY-canvas.offsetTop);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX-canvas.offsetLeft,e.clientY-canvas.offsetTop);
+        }
+        function changecolor(color){
+            currentcolor=color;
+        }
+        function clearcanvas(){
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+        }
+        function downloadcanvas(){
+            const image=canvas.toDataURL('image/png');
+            const link=document.createElement('a');
+            link.href=image;
+            link.download='my_drawing.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+       
+    </script>
+</body>
+</html>
